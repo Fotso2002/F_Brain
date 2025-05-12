@@ -1,0 +1,46 @@
+services:
+  client:
+    build: ./client
+    ports:
+      - "5173:5173"
+      - "4173:4173"
+    networks:
+      - app-net
+
+  server:
+    build: ./server
+    ports:
+      - "8000:8000"
+    networks:
+      - app-net
+
+  monitoring-prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - app-net
+
+  monitoring-grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - app-net
+
+  proxy:
+    build: ./proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - client
+      - server
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
+

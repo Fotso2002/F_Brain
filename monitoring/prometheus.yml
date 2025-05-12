@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 10s  # fréquence de scrutation des cibles
+  evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['server:8000']  # Nom du service Docker du backend
+
+  - job_name: 'frontend'
+    static_configs:
+      - targets: ['client:5173']  # Ou une cible d'export metrics si implémentée
+
